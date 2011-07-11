@@ -51,10 +51,28 @@ require(__dirname).test({
   expect : [
     ["opentag", {"name": "R","attributes": {}}],
     ["opentag", {"name": "SCRIPT","attributes": {}}],
+    ["opencdata"],
+    ["cdata", "\n  some stuff here\n//"],
+    ["closecdata"],
     ["closetag", "SCRIPT"],
     ["opentag", {"name": "STYLE","attributes": {}}],
+    ["opencdata"],
+    ["cdata", " */\n  css css css\n/*"],
+    ["closecdata"],
     ["closetag", "STYLE"],
     ["closetag", "R"]
   ]
 });
 
+require(__dirname).test({
+  xml : '<r><script>//<![CDATA[ don\'t close on embedded </script> tags within cdata sections]]></script></r>',
+  expect : [
+    ["opentag", {"name": "R","attributes": {}}],
+    ["opentag", {"name": "SCRIPT","attributes": {}}],
+    ["opencdata"],
+    ["cdata", " don\'t close on embedded </script> tags within cdata sections"],
+    ["closecdata"],
+    ["closetag", "SCRIPT"],
+    ["closetag", "R"]
+  ]
+});
